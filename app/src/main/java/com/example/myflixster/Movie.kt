@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 class Movie {
 
-    @SerializedName("original_title")
+    @SerializedName("title")
     val title:String? = null
 
     //val description:String? = null

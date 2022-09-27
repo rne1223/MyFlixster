@@ -1,5 +1,6 @@
 package com.example.myflixster
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +11,12 @@ import com.example.myflixster.R.id
 class MoviesRecyclerViewAdapter (
     private val movies: List<Movie>,
     private val mListener: OnListFragmentIteractionListener?
-    ) : RecyclerView.Adapter<MoviesRecyclerViewAdapter.MovieViewHolder> (){
+    ) : RecyclerView.Adapter<MoviesRecyclerViewAdapter.MovieViewHolder>(){
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
+            Log.v("MoviesRecyclerViewAdapter", "hello from the recycler")
+
+            Log.v("MoviesRecyclerViewAdapter", movies.toString())
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.movie_item, parent, false)
             return MovieViewHolder(view)
@@ -27,8 +31,11 @@ class MoviesRecyclerViewAdapter (
             }
         }
 
-        override fun onBindViewHolder(holder: MovieViewHolder, postion: Int) {
-            val movie = movies[postion]
+        override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
+            val movie = movies[position]
+
+            Log.v("MoviesRecyclerViewAdapter", movie.title.toString())
+
 
             holder.mMovie = movie
             holder.mTitle.text = movie.title

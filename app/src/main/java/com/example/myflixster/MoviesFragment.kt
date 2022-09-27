@@ -16,9 +16,12 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.Headers
+import org.json.JSONArray
 import org.json.JSONObject
 
 private const val API_KEY = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
+private const val NY_API_KEY = "EeNDb39VWWhGxunyJSOb8KE2RI3SOWJE"
+private const val NY_URL = "https://api.nytimes.com/svc/books/v3/lists/current/hardcover-fiction.json"
 private const val BASE_URL = "https://api.themoviedb.org/3/movie/"
 private const val END_POINT = "now_playing?language=en-US&page=1&api_key="
 
@@ -40,6 +43,7 @@ class MoviesFragment: Fragment(), OnListFragmentIteractionListener {
         val recyclerView = view.findViewById<View>(R.id.list) as RecyclerView
         val context =  view.context
 
+
         recyclerView.layoutManager = LinearLayoutManager(context)
         updateAdapter(progressBar, recyclerView)
         return view
@@ -51,23 +55,28 @@ class MoviesFragment: Fragment(), OnListFragmentIteractionListener {
         // Create a AsyncHttpClient
         val client = AsyncHttpClient()
         val params = RequestParams()
-        params["api-key"] = API_KEY
+        //params["api-key"] = NY_API_KEY
 
-        client[BASE_URL + END_POINT + API_KEY,
+        var url: String = BASE_URL + END_POINT + API_KEY
+        Log.v("MoviesFragment", url)
+
+        client[url,
                 params,
                 object: JsonHttpResponseHandler() {
                     override fun onSuccess(statusCode: Int, headers: Headers, json: JSON?) {
                         progressBar.hide()
+                        //Log.v("MoviesFragment", json.toString())
+                        //Log.v("MoviesFragment", json?.jsonObject?.get("results").toString())
 
-                        val resultJSON: JSONObject = json?.jsonObject?.get("results") as JSONObject
-                        val movieRawJson: String = resultJSON.get("").toString()
+                        val resultJSON: JSONObject = json?.jsonObject as JSONObject
+                        Log.v("MoviesFragment", resultJSON.toString())
+                        val movieRawJson: String = resultJSON.get("results").toString()
 
                         val gson = Gson()
                         val arrayMovie = object : TypeToken<List<Movie>>() {}.type
                         val models: List<Movie> = gson.fromJson(movieRawJson, arrayMovie )
 
                         recyclerView.adapter = MoviesRecyclerViewAdapter(models, this@MoviesFragment)
-
                         Log.d("MoviesFragment","response success")
                     }
 
